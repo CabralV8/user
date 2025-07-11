@@ -1,10 +1,16 @@
 package com.proj.user.business;
 
 import com.proj.user.business.converter.UserConverter;
+import com.proj.user.business.dto.AddressDTO;
+import com.proj.user.business.dto.TelephoneDTO;
 import com.proj.user.business.dto.UserDTO;
+import com.proj.user.infrastructure.entity.Address;
+import com.proj.user.infrastructure.entity.Telephone;
 import com.proj.user.infrastructure.entity.User;
 import com.proj.user.infrastructure.exceptions.ConflictException;
 import com.proj.user.infrastructure.exceptions.ResourceNotFoundException;
+import com.proj.user.infrastructure.repositories.AddressRepository;
+import com.proj.user.infrastructure.repositories.TelephoneRepository;
 import com.proj.user.infrastructure.repositories.UserRepository;
 import com.proj.user.infrastructure.security.JwtUtil;
 import lombok.RequiredArgsConstructor;
@@ -19,6 +25,8 @@ public class UserService {
     private final UserConverter userConverter;
     private final PasswordEncoder passwordEncoder;
     private final JwtUtil jwtUtil;
+    private final AddressRepository addressRepository;
+    private final TelephoneRepository telephoneRepository;
 
     public UserDTO saveUser(UserDTO userDTO){
         existentEmail(userDTO.getEmail());
@@ -42,9 +50,17 @@ public class UserService {
         return userRepository.existsByEmail(email);
     }
 
-    public User searchUserByEmail(String email){
-        return userRepository.findByEmail(email).orElseThrow(() ->
-                new ResourceNotFoundException("Email not found" + email));
+    public UserDTO searchUserByEmail(String email) {
+        try {
+            return userConverter.toUserDTO(
+                    userRepository.findByEmail(email)
+                            .orElseThrow(
+                                    () -> new ResourceNotFoundException("Email not found " + email)
+                            )
+            );
+        } catch (ResourceNotFoundException e) {
+            throw new ResourceNotFoundException("Email not found " + email);
+        }
     }
 
     public void deleteUserByEmail(String email){
@@ -62,6 +78,25 @@ public class UserService {
 
 
         return userConverter.toUserDTO(userRepository.save(userEntity));
+    }
+
+    public AddressDTO updateAddress(Long idAddress, AddressDTO addressDTO){
+
+        Address entity = addressRepository.findById(idAddress).orElseThrow(()->
+                new ResourceNotFoundException("Id not found" + idAddress));
+
+        Address address = userConverter.updateAddress(addressDTO, entity);
+
+        return userConverter.toAddressDTO(addressRepository.save(address));
+    }
+
+    public TelephoneDTO updateTelephone(Long idTelephone, TelephoneDTO telephoneDTO){
+        Telephone telephoneEntity = telephoneRepository.findById(idTelephone).orElseThrow(()->
+                new ResourceNotFoundException("Id not found" + idTelephone));
+
+        Telephone telephone = userConverter.updateTelephone(telephoneDTO, telephoneEntity);
+
+        return userConverter.toTelephoneDTO(telephoneRepository.save(telephone));
     }
 
 }
