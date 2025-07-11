@@ -9,11 +9,12 @@ import lombok.*;
 @Builder
 public class AddressDTO {
 
+    private Long id;
     private String street;
     private Long number;
-    private String address_line_2;
+    private String addressLine2;
     private String city;
     private String state;
-    private String postal_code;
+    private String postalCode;
 
 }

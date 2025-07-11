@@ -9,6 +9,7 @@ import lombok.*;
 @Builder
 public class TelephoneDTO {
 
+    private Long id;
     private String number;
     private String ddd;
 

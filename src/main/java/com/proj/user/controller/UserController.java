@@ -1,8 +1,9 @@
 package com.proj.user.controller;
 
 import com.proj.user.business.UserService;
+import com.proj.user.business.dto.AddressDTO;
+import com.proj.user.business.dto.TelephoneDTO;
 import com.proj.user.business.dto.UserDTO;
-import com.proj.user.infrastructure.entity.User;
 import com.proj.user.infrastructure.security.JwtUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -36,7 +37,7 @@ public class UserController {
     }
 
     @GetMapping
-    public ResponseEntity<User> searchUserByEmail(@RequestParam("email") String email){
+    public ResponseEntity<UserDTO> searchUserByEmail(@RequestParam("email") String email){
         return ResponseEntity.ok(userService.searchUserByEmail(email));
     }
 
@@ -44,6 +45,24 @@ public class UserController {
     public ResponseEntity<Void> deleteUserByEmail(@PathVariable String email){
         userService.deleteUserByEmail(email);
         return ResponseEntity.ok().build();
+    }
+
+    @PutMapping
+    public ResponseEntity<UserDTO> updateUserData(@RequestBody UserDTO userDTO,
+                                                  @RequestHeader("Authorization") String token){
+        return ResponseEntity.ok(userService.updateUserData(token, userDTO));
+    }
+
+    @PutMapping("/address")
+    public ResponseEntity<AddressDTO> updateAddress(@RequestBody AddressDTO addressDTO,
+                                                    @RequestParam("id")Long id){
+        return ResponseEntity.ok(userService.updateAddress(id, addressDTO));
+    }
+
+    @PutMapping("/telephone")
+    public ResponseEntity<TelephoneDTO> updateTelephone(@RequestBody TelephoneDTO telephoneDTO,
+                                                        @RequestHeader("id") Long id){
+        return ResponseEntity.ok(userService.updateTelephone(id, telephoneDTO));
     }
 
 }

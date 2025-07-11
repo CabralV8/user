@@ -40,21 +40,22 @@ public class UserConverter {
         return Address.builder()
                 .street(dto.getStreet())
                 .number(dto.getNumber())
-                .addressLine2(dto.getAddress_line_2())
+                .addressLine2(dto.getAddressLine2())
                 .city(dto.getCity())
                 .state(dto.getState())
-                .postalCode(dto.getPostal_code())
+                .postalCode(dto.getPostalCode())
                 .build();
     }
 
     public AddressDTO toAddressDTO(Address entity) {
         return AddressDTO.builder()
+                .id(entity.getId())
                 .street(entity.getStreet())
                 .number(entity.getNumber())
-                .address_line_2(entity.getAddressLine2())
+                .addressLine2(entity.getAddressLine2())
                 .city(entity.getCity())
                 .state(entity.getState())
-                .postal_code(entity.getPostalCode())
+                .postalCode(entity.getPostalCode())
                 .build();
     }
 
@@ -84,6 +85,7 @@ public class UserConverter {
 
     public TelephoneDTO toTelephoneDTO(Telephone entity) {
         return TelephoneDTO.builder()
+                .id(entity.getId())
                 .number(entity.getNumber())
                 .ddd(entity.getDdd())
                 .build();
@@ -104,4 +106,37 @@ public class UserConverter {
         }
         return list;
     }
+
+    public User updateUser(UserDTO userDTO, User userEntity){
+        return User.builder()
+                .name(userDTO.getName() != null ? userDTO.getName() : userEntity.getName())
+                .id(userEntity.getId())
+                .password(userDTO.getPassword() != null ? userDTO.getPassword() : userEntity.getPassword())
+                .email(userDTO.getEmail() != null ? userDTO.getEmail() : userEntity.getEmail())
+                .addresses(userEntity.getAddresses())
+                .telephones(userEntity.getTelephones())
+                .build();
+    }
+
+    public Address updateAddress(AddressDTO addressDTO, Address addressEntity){
+        return Address.builder()
+                .id(addressEntity.getId())
+                .street(addressDTO.getStreet() != null ? addressDTO.getStreet() : addressEntity.getStreet())
+                .number(addressDTO.getNumber() != null ? addressDTO.getNumber() : addressEntity.getNumber())
+                .city(addressDTO.getCity() != null ? addressDTO.getCity() : addressEntity.getCity())
+                .postalCode(addressDTO.getPostalCode() != null ? addressDTO.getPostalCode() : addressEntity.getPostalCode())
+                .addressLine2(addressDTO.getAddressLine2() != null ? addressDTO.getAddressLine2() : addressEntity.getAddressLine2())
+                .state(addressDTO.getState() != null ? addressDTO.getState() : addressEntity.getState())
+                .build();
+    }
+
+    public Telephone updateTelephone(TelephoneDTO telephoneDTO, Telephone telephoneEntity){
+        return Telephone.builder()
+                .id(telephoneEntity.getId())
+                .ddd(telephoneDTO.getDdd() != null ? telephoneDTO.getDdd() : telephoneEntity.getDdd())
+                .number(telephoneDTO.getNumber() != null ? telephoneDTO.getNumber() : telephoneEntity.getNumber())
+                .build();
+    }
+
+
 }
