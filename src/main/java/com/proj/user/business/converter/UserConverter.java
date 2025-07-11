@@ -104,4 +104,16 @@ public class UserConverter {
         }
         return list;
     }
+
+    public User updateUser(UserDTO userDTO, User userEntity){
+        return User.builder()
+                .name(userDTO.getName() != null ? userDTO.getName() : userEntity.getName())
+                .id(userEntity.getId())
+                .password(userDTO.getPassword() != null ? userDTO.getPassword() : userEntity.getPassword())
+                .email(userDTO.getEmail() != null ? userDTO.getEmail() : userEntity.getEmail())
+                .addresses(userEntity.getAddresses())
+                .telephones(userEntity.getTelephones())
+                .build();
+    }
+
 }
