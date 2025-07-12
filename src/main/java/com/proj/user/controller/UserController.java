@@ -23,12 +23,12 @@ public class UserController {
     private final JwtUtil jwtUtil;
 
     @PostMapping
-    public ResponseEntity<UserDTO> saveUser(@RequestBody UserDTO userDTO){
+    public ResponseEntity<UserDTO> saveUser(@RequestBody UserDTO userDTO) {
         return ResponseEntity.ok(userService.saveUser(userDTO));
     }
 
     @PostMapping("/login")
-    public String login(@RequestBody UserDTO userDTO){
+    public String login(@RequestBody UserDTO userDTO) {
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(userDTO.getEmail(),
                         userDTO.getPassword())
@@ -37,32 +37,43 @@ public class UserController {
     }
 
     @GetMapping
-    public ResponseEntity<UserDTO> searchUserByEmail(@RequestParam("email") String email){
+    public ResponseEntity<UserDTO> searchUserByEmail(@RequestParam("email") String email) {
         return ResponseEntity.ok(userService.searchUserByEmail(email));
     }
 
     @DeleteMapping("/{email}")
-    public ResponseEntity<Void> deleteUserByEmail(@PathVariable String email){
+    public ResponseEntity<Void> deleteUserByEmail(@PathVariable String email) {
         userService.deleteUserByEmail(email);
         return ResponseEntity.ok().build();
     }
 
     @PutMapping
     public ResponseEntity<UserDTO> updateUserData(@RequestBody UserDTO userDTO,
-                                                  @RequestHeader("Authorization") String token){
+                                                  @RequestHeader("Authorization") String token) {
         return ResponseEntity.ok(userService.updateUserData(token, userDTO));
     }
 
     @PutMapping("/address")
     public ResponseEntity<AddressDTO> updateAddress(@RequestBody AddressDTO addressDTO,
-                                                    @RequestParam("id")Long id){
+                                                    @RequestParam("id") Long id) {
         return ResponseEntity.ok(userService.updateAddress(id, addressDTO));
     }
 
     @PutMapping("/telephone")
     public ResponseEntity<TelephoneDTO> updateTelephone(@RequestBody TelephoneDTO telephoneDTO,
-                                                        @RequestHeader("id") Long id){
+                                                        @RequestHeader("id") Long id) {
         return ResponseEntity.ok(userService.updateTelephone(id, telephoneDTO));
     }
 
+    @PostMapping("/address")
+    public ResponseEntity<AddressDTO> registerAddres(@RequestBody AddressDTO addressDTO,
+                                                     @RequestHeader("Authorization") String token) {
+        return ResponseEntity.ok(userService.registerAddress(token, addressDTO));
+    }
+
+    @PostMapping("/telphone")
+    public ResponseEntity<TelephoneDTO> registerTelephone(@RequestBody TelephoneDTO telephoneDTO,
+                                                          @RequestHeader("Authorization") String token) {
+        return ResponseEntity.ok(userService.registerTelephone(token, telephoneDTO));
+    }
 }

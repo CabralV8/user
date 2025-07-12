@@ -99,4 +99,25 @@ public class UserService {
         return userConverter.toTelephoneDTO(telephoneRepository.save(telephone));
     }
 
+    public AddressDTO registerAddress(String token, AddressDTO addressDTO){
+        String email = jwtUtil.extractEmailToken(token.substring(7));
+        User user = userRepository.findByEmail(email).orElseThrow(()->
+                new ResourceNotFoundException("Email not located " + email));
+
+        Address address = userConverter.toAddressEntity(addressDTO, user.getId());
+        Address addressEntity = addressRepository.save(address);
+        return userConverter.toAddressDTO(addressEntity);
+    }
+
+    public TelephoneDTO registerTelephone(String token, TelephoneDTO telephoneDTO){
+        String email = jwtUtil.extractEmailToken(token.substring(7));
+        User user = userRepository.findByEmail(email).orElseThrow(()->
+                new ResourceNotFoundException("Email not located" + email));
+
+        Telephone telephone = userConverter.toTelephoneEntity(telephoneDTO, user.getId());
+        Telephone telephoneEntity = telephoneRepository.save(telephone);
+
+        return userConverter.toTelephoneDTO(telephoneEntity);
+    }
+
 }

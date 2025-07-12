@@ -138,5 +138,24 @@ public class UserConverter {
                 .build();
     }
 
+    public Address toAddressEntity(AddressDTO addressDTO, Long userId){
+        return Address.builder()
+                .street(addressDTO.getStreet())
+                .city(addressDTO.getCity())
+                .postalCode(addressDTO.getPostalCode())
+                .addressLine2(addressDTO.getAddressLine2())
+                .state(addressDTO.getState())
+                .number(addressDTO.getNumber())
+                .user_id(userId)
+                .build();
+    }
+
+    public Telephone toTelephoneEntity(TelephoneDTO telephoneDTO, Long userId){
+        return Telephone.builder()
+                .number(telephoneDTO.getNumber())
+                .ddd(telephoneDTO.getDdd())
+                .user_id(userId)
+                .build();
+    }
 
 }
