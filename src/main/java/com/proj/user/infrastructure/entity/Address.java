@@ -36,4 +36,7 @@ public class Address {
     @Column(name = "postal_code", length = 9)
     @JsonProperty("postal_code")
     private String postalCode;
+
+    @Column(name = "user_id")
+    private Long user_id;
 }
